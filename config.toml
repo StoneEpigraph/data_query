@@ -1,0 +1,40 @@
+[rabbitmq]
+# 基础连接配置
+host = "127.0.0.1"
+port = 5672
+vhost = "/"
+
+# 认证信息 (敏感数据建议放.env)
+username = "star"
+password = "Juiqo37y5"
+# password 通过环境变量注入
+
+max_retries = 3
+retry_delay_ms = 1000
+
+# 要查询的队列列表
+queues = ["cruise.sync.queue", "online.order.sync.queue", "online.gps.sync.queue", "passAndDanger.gps.sync.queue", "vehicle.gps.sync.queue"]
+
+
+# 改为队列配置列表
+[[rabbitmq.queues]]
+name = "cruise.sync.queue"
+alias = "巡游轨迹同步队列"
+timeout_ms = 5000  # 可选的超时设置
+
+[[rabbitmq.queues]]
+name = "online.order.sync.queue"
+alias = "网约订单同步队列"
+timeout_ms = 5000  # 可选的超时设置
+
+[[rabbitmq.queues]]
+name = "online.gps.sync.queue"
+alias = "网约轨迹同步队列"
+
+[[rabbitmq.queues]]
+name = "passAndDanger.gps.sync.queue"
+alias = "危险品轨迹同步队列"
+
+[[rabbitmq.queues]]
+name = "vehicle.gps.sync.queue"
+alias = "车辆轨迹同步队列"
