@@ -1,0 +1,33 @@
+version: "3"
+# 没有自定义网络就不配
+# networks:
+#  my_tdengine_net:
+#    external: true
+
+services:
+tdengine:
+#开机自启
+restart: always
+#指定镜像
+image: tdengine/tdengine:latest
+#指定容器hostname
+hostname: tdengine
+#容器名称
+container_name: tdengine
+#创建容器后默认执行的命令
+privileged: true
+#容器的映射端口
+ports:
+  - 6020:6020
+  - 6030-6042:6030-6042/tcp
+  - 6030-6042:6030-6042/udp
+#定义挂载点
+volumes:
+  # - /etc/localtime:/etc/localtime:ro #同步主机时区到容器
+  - ./data/node1data:/var/lib/taos
+  - ./etc/node1etc:/etc/taos
+  - ./log/node1log:/var/log/taos
+# 没有自定义网络就不配(下面还有两个节点)
+# networks:
+#  my_tdengine_net:
+#      ipv4_address: 192.76.0.101
