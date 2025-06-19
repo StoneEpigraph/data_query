@@ -1,4 +1,4 @@
-use crate::{error::{MqError, is_queue_not_found}};
+use crate::{error::{AppError, is_queue_not_found}};
 use lapin::{Channel, options::QueueDeclareOptions, types::FieldTable};
 use tokio::time::{timeout, Duration};
 
@@ -15,7 +15,7 @@ impl<'a> QueueInspector<'a> {
         &self,
         queue_name: &str,
         timeout_ms: Option<u64>,
-    ) -> Result<u32, MqError> {
+    ) -> Result<u32, AppError> {
         let result = match timeout_ms {
             Some(ms) => timeout(
                 Duration::from_millis(ms),
@@ -27,11 +27,11 @@ impl<'a> QueueInspector<'a> {
         match result {
             Ok(Ok(count)) => Ok(count),
             Ok(Err(e)) => Err(e),
-            Err(_) => Err(MqError::QueueTimeout(queue_name.to_string())),
+            Err(_) => Err(AppError::QueueTimeout(queue_name.to_string())),
         }
     }
 
-    async fn query_queue(&self, queue_name: &str) -> Result<u32, MqError> {
+    async fn query_queue(&self, queue_name: &str) -> Result<u32, AppError> {
         let options = QueueDeclareOptions {
             passive: true,
             ..Default::default()
@@ -43,9 +43,9 @@ impl<'a> QueueInspector<'a> {
         {
             Ok(queue) => Ok(queue.message_count()),
             Err(e) if is_queue_not_found(&e.kind()) => {
-                Err(MqError::QueueNotFound(queue_name.to_string()))
+                Err(AppError::QueueNotFound(queue_name.to_string()))
             }
-            Err(e) => Err(MqError::QueueQueryError {
+            Err(e) => Err(AppError::QueueQueryError {
                 queue: queue_name.to_string(),
                 source: e,
             }),

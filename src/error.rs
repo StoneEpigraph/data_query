@@ -1,8 +1,9 @@
 use thiserror::Error;
 use lapin;
+use serde::Deserialize;
 
 #[derive(Debug, Error)]
-pub enum MqError {
+pub enum AppError {
     #[error("配置错误: {0}")]
     ConfigError(String),
 

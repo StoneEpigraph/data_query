@@ -3,18 +3,10 @@
 host = "127.0.0.1"
 port = 5672
 vhost = "/"
-
-# 认证信息 (敏感数据建议放.env)
 username = "star"
 password = "Juiqo37y5"
-# password 通过环境变量注入
-
 max_retries = 3
 retry_delay_ms = 1000
-
-# 要查询的队列列表
-queues = ["cruise.sync.queue", "online.order.sync.queue", "online.gps.sync.queue", "passAndDanger.gps.sync.queue", "vehicle.gps.sync.queue"]
-
 
 # 改为队列配置列表
 [[rabbitmq.queues]]

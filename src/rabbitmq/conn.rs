@@ -1,4 +1,4 @@
-use crate::{error::MqError, config::RabbitMQConfig};
+use crate::{error::AppError, config::RabbitMQConfig};
 use lapin::{Connection, ConnectionProperties};
 use tracing::warn;
 use tokio::time;
@@ -12,7 +12,7 @@ impl RabbitConnector {
         Self { config }
     }
 
-    pub async fn connect(&self) -> Result<Connection, MqError> {
+    pub async fn connect(&self) -> Result<Connection, AppError> {
         let mut attempt = 0;
         let conn_string = self.connection_string();
 
@@ -21,7 +21,7 @@ impl RabbitConnector {
             match Connection::connect(&conn_string, ConnectionProperties::default()).await {
                 Ok(conn) => return Ok(conn),
                 Err(err) if attempt >= self.config.max_retries => {
-                    return Err(MqError::ConnectionRetryExhausted {
+                    return Err(AppError::ConnectionRetryExhausted {
                         host: self.config.host.clone(),
                         port: self.config.port,
                         attempts: self.config.max_retries,

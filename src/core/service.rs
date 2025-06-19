@@ -1,6 +1,6 @@
 use crate::{
     config::{RabbitMQConfig, QueueConfig},
-    error::MqError,
+    error::AppError,
     rabbitmq::{conn::RabbitConnector, queue::QueueInspector},
 };
 use anyhow::Context;
@@ -61,7 +61,7 @@ impl QueueMetricsService {
         &self,
         inspector: &QueueInspector<'_>,
         queue: &QueueConfig,
-    ) -> Result<QueueMetric, MqError> {
+    ) -> Result<QueueMetric, AppError> {
         let count = inspector.get_message_count(&queue.name, queue.timeout_ms).await?;
 
         Ok(QueueMetric {
@@ -71,16 +71,16 @@ impl QueueMetricsService {
         })
     }
 
-    fn handle_queue_error(&self, error: MqError, queue: &QueueConfig) {
+    fn handle_queue_error(&self, error: AppError, queue: &QueueConfig) {
         let alias = queue.alias.as_deref()
             .or_else(|| self.connector.config.queue_aliases.get(&queue.name).map(String::as_str))
             .unwrap_or(&queue.name);
 
         match error {
-            MqError::QueueNotFound(_) => {
+            AppError::QueueNotFound(_) => {
                 warn!("⚠️ 队列不存在: {} [{}]", alias, queue.name)
             }
-            MqError::QueueTimeout(_) => {
+            AppError::QueueTimeout(_) => {
                 warn!("⏱️ 队列查询超时: {} [{}]", alias, queue.name)
             }
             _ => {

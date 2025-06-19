@@ -50,18 +50,18 @@ fn print_metrics(metrics: &[crate::core::service::QueueMetric]) -> Result<(), st
     // 计算最大列宽
     let mut max_name_width = "队列".len();
     for metric in metrics {
-        let name = metric.alias.as_deref().unwrap_or(&metric.name);
+        let name = metric.name.as_str();
         max_name_width = max_name_width.max(name.len());
     }
 
     let header_sep = "─".repeat(max_name_width + 6);
 
     println!("┌{}┬───────┐", header_sep);
-    println!("│ {:width$} │ 消息数 │", "队列", width = max_name_width + 4);
+    println!("│ {:width$} │ count │", "queue", width = max_name_width + 4);
     println!("├{}┼───────┤", header_sep);
 
     for metric in metrics {
-        let name = metric.alias.as_deref().unwrap_or(&metric.name);
+        let name = metric.name.as_str();
         println!("│ {:<width$} │ {:<5} │", name, metric.count, width = max_name_width + 4);
     }
 

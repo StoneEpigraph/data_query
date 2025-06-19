@@ -14,3 +14,8 @@ tracing-subscriber = "0.3.19"
 thiserror = "2.0.12"
 anyhow = "1.0.98"
 toml = "0.8.23"
+
+
+[target.x86_64-unknown-linux-musl]
+linker = "x86_64-linux-musl-gcc"  # 指定 musl 链接器
+rustflags = ["-C", "target-feature=+crt-static"]  # 强制静态链接
