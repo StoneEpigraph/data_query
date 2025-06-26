@@ -2,6 +2,7 @@ mod error;
 mod config;
 mod rabbitmq;
 mod core;
+mod util;
 
 use std::fmt::Write;
 use anyhow::{Context, Result};
@@ -54,17 +55,17 @@ fn print_metrics(metrics: &[crate::core::service::QueueMetric]) -> Result<(), st
         max_name_width = max_name_width.max(name.len());
     }
 
-    let header_sep = "─".repeat(max_name_width + 6);
+    let header_sep = "─".repeat(max_name_width + 14);
 
-    println!("┌{}┬───────┐", header_sep);
-    println!("│ {:width$} │ count │", "queue", width = max_name_width + 4);
-    println!("├{}┼───────┤", header_sep);
+    println!("┌{}┬──────────────┐", header_sep);
+    println!("│ {:width$} │     count    │", "queue", width = max_name_width + 12);
+    println!("├{}┼──────────────┤", header_sep);
 
     for metric in metrics {
         let name = metric.name.as_str();
-        println!("│ {:<width$} │ {:<5} │", name, metric.count, width = max_name_width + 4);
+        println!("│ {:<width$} │ {:<12} │", name, metric.count, width = max_name_width + 12);
     }
 
-    println!("└{}┴───────┘", header_sep);
+    println!("└{}┴──────────────┘", header_sep);
     Ok(())
 }

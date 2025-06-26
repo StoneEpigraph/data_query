@@ -30,3 +30,10 @@ alias = "危险品轨迹同步队列"
 [[rabbitmq.queues]]
 name = "vehicle.gps.sync.queue"
 alias = "车辆轨迹同步队列"
+
+[dingtalk]
+# 钉钉机器人配置
+webhook_url = "https://oapi.dingtalk.com/robot/send?sign={}&timestamp={}"
+secret = "SEC01fda2a7e306e40342d6d9208070229ab695fc58261cf06a7acaff15b4d83dcc"
+user_id = "Monitor"
+custom_robot_token = "f75bc7df728e57bb061e84d2e003cb3fe349044f33d9396a24be8f3a6f52ea4a"

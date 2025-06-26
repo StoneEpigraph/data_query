@@ -34,9 +34,18 @@ pub struct RabbitMQConfig {
     pub queue_aliases: HashMap<String, String>,
 }
 
+#[derive(Debug, Deserialize, Clone)]
+pub struct DingTalkConfig {
+    pub webhook_url: String,
+    pub secret: String,
+    pub user_id: String,
+    pub custom_robot_token: String,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub rabbitmq: RabbitMQConfig,
+    pub dingtalk: DingTalkConfig,
 }
 
 impl Config {
