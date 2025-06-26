@@ -24,12 +24,10 @@ impl QueueMetricsService {
     }
 
     pub async fn gather_metrics(&self) -> anyhow::Result<Vec<QueueMetric>> {
-        // 使用 anyhow 添加上下文
         let conn = match self.connector.connect().await {
             Ok(conn) => conn,
             Err(e) => return Err(e).context("连接 RabbitMQ 失败"),
         };
-            
 
         info!("✅ RabbitMQ 连接成功");
 

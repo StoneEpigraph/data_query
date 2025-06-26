@@ -38,6 +38,7 @@ warning_type = "DingTalk"  # 告警方式，目前仅支持钉钉
 
 [dingtalk]
 # 钉钉机器人配置
+webhook_url = "https://oapi.dingtalk.com/robot/send"
 secret = "SEC01fda2a7e306e40342d6d9208070229ab695fc58261cf06a7acaff15b4d83dcc"
 user_id = "Monitor"
 custom_robot_token = "f75bc7df728e57bb061e84d2e003cb3fe349044f33d9396a24be8f3a6f52ea4a"
@@ -47,4 +48,3 @@ custom_robot_token = "f75bc7df728e57bb061e84d2e003cb3fe349044f33d9396a24be8f3a6f
 warning_valid = false  # 是否启用告警功能
 warning_type = "DingTalk"
 warning_time_interval = 10  # 告警时间间隔，单位：分钟
-

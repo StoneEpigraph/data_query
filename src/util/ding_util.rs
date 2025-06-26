@@ -11,14 +11,15 @@ pub async fn send(content: &str) -> anyhow::Result<String> {
     let config = Config::load()
         .context("配置加载失败")?;
     let dingtalk_config = config.dingtalk.clone();
+    let webhook_url = dingtalk_config.webhook_url.clone();
     let secret = dingtalk_config.secret.clone();
     let access_token = dingtalk_config.custom_robot_token.clone();
-    send_message(content, &secret, &access_token, true).await?;
+    send_message(content, &webhook_url, &secret, &access_token, true).await?;
     Ok("发送成功".to_owned())
 }
 
 // 发送加签消息
-async fn send_message(content: &str, secret: &str, access_token: &str, is_at_all: bool) -> Result<(), reqwest::Error> {
+async fn send_message(content: &str, webhook_url: &str, secret: &str, access_token: &str, is_at_all: bool) -> Result<(), reqwest::Error> {
     // 1. 生成签名
     let timestamp = chrono::Utc::now().timestamp_millis().to_string();
     let sign_str = format!("{}\n{}", timestamp, secret);
@@ -28,8 +29,8 @@ async fn send_message(content: &str, secret: &str, access_token: &str, is_at_all
 
     // 2. 构建请求
     let url = format!(
-        "https://oapi.dingtalk.com/robot/send?access_token={}&timestamp={}&sign={}",
-        access_token, timestamp, sign
+        "{}?access_token={}&timestamp={}&sign={}",
+        webhook_url, access_token, timestamp, sign
     );
     let payload = json!({
         "msgtype": "text",

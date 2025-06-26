@@ -46,6 +46,7 @@ pub struct RabbitMQWarningConfig {
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct DingTalkConfig {
+    pub webhook_url: String,
     pub secret: String,
     pub user_id: String,
     pub custom_robot_token: String,
