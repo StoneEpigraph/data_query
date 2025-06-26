@@ -13,7 +13,7 @@ pub async fn send(content: &str) -> anyhow::Result<String> {
     let dingtalk_config = config.dingtalk.clone();
     let secret = dingtalk_config.secret.clone();
     let access_token = dingtalk_config.custom_robot_token.clone();
-    send_message("测试内容", &secret, &access_token, true).await?;
+    send_message(content, &secret, &access_token, true).await?;
     Ok("发送成功".to_owned())
 }
 

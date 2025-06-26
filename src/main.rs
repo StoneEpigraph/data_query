@@ -5,12 +5,14 @@ mod core;
 mod util;
 
 use std::fmt::Write;
-use anyhow::{Context, Result};
+use anyhow::{Context, Error, Result};
 use tracing::{error, info};
 use crate::{
     config::Config,
     core::service::QueueMetricsService,
 };
+use crate::config::{RabbitMQWarningConfig, WarningConfig, WarningType};
+use crate::util::ding_util;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -22,13 +24,14 @@ async fn main() -> Result<()> {
         .context("配置加载失败")?;
 
     // 创建服务
-    let service = QueueMetricsService::new(config.rabbitmq);
+    let service = QueueMetricsService::new(config.rabbitmq.clone());
 
     // 执行指标收集
     match service.gather_metrics().await {
         Ok(metrics) => {
             print_metrics(&metrics)?;
             info!("✅ 监控任务完成");
+            send_warning_msg(&metrics, config.rabbitmq.warning).await?;
             Ok(())
         }
         Err(e) => {
@@ -68,4 +71,45 @@ fn print_metrics(metrics: &[crate::core::service::QueueMetric]) -> Result<(), st
 
     println!("└{}┴──────────────┘", header_sep);
     Ok(())
+}
+
+
+async fn send_warning_msg(metrics: &[crate::core::service::QueueMetric], warning_config: RabbitMQWarningConfig) -> std::result::Result<(), Error> {
+    if metrics.is_empty() {
+        return Ok(());
+    }
+    
+    if !warning_config.enabled {
+        return Ok(());
+    }
+    
+    let mut warning_msg = "队列数量过多，请检查是否有死信队列或过多的消息积压。\n".to_string();
+    let mut warning_count = 0;
+    for metric in metrics {
+        let name = metric.name.as_str();
+        let count = metric.count;
+        if count > warning_config.warning_queue_size {
+            warning_msg.push_str(format!("{}: {}\n", name, count).as_str());
+            warning_count += 1;
+        }
+    }
+    
+    if warning_count == 0 {
+        return Ok(());
+    }
+
+    warning_msg.push_str(format!("共有 {} 个队列超过警戒值。", warning_count).as_str());
+
+    match warning_config.warning_type {
+        None => Ok(()),
+        Some(WarningType::DingTalk) => {
+            ding_util::send(&warning_msg).await.or_else(|err| {
+                Err(anyhow::anyhow!("钉钉通知失败: {}", err))
+            }).expect("TODO: panic message");
+            info!("✅ 已发送钉钉通知");
+            Ok(())
+        },
+    }.or_else(|err: anyhow::Error| {
+        Err(anyhow::anyhow!(err))
+    })
 }

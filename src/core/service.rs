@@ -19,7 +19,7 @@ pub struct QueueMetric {
 impl QueueMetricsService {
     pub fn new(config: RabbitMQConfig) -> Self {
         Self {
-            connector: RabbitConnector::new(config),
+            connector: RabbitConnector::new(config.clone()),
         }
     }
 
