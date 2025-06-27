@@ -20,7 +20,7 @@ hmac = "0.12.1"
 sha2 = "0.10.9"
 chrono = "0.4.41"
 base64 = "0.22.1"
-
+openssl = { version = "0.10", features = ["vendored"] }
 
 [target.x86_64-unknown-linux-musl]
 linker = "x86_64-linux-musl-gcc"  # 指定 musl 链接器

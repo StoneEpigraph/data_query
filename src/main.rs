@@ -42,8 +42,7 @@ async fn main() -> Result<()> {
             for cause in e.chain() {
                 write!(&mut full_error, "\nCaused by: {}", cause)?;
             }
-
-            error!("监控任务失败: {}", full_error);
+            ding_util::send(&full_error).await?;
             Err(anyhow::anyhow!(full_error))
         }
     }
