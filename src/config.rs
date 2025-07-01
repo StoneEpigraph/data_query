@@ -1,9 +1,8 @@
 use crate::error::AppError;
 use crate::error::AppError::ConfigError;
-use dotenvy;
 use serde::Deserialize;
-use std::{collections::HashMap, fs};
 use std::path::Path;
+use std::{collections::HashMap, fs};
 use toml::from_str;
 
 #[derive(Debug, Deserialize, Clone)]

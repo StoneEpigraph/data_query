@@ -1,6 +1,5 @@
-use thiserror::Error;
 use lapin;
-use serde::Deserialize;
+use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
@@ -20,7 +19,8 @@ pub enum AppError {
     #[error("队列查询错误: {queue}")]
     QueueQueryError {
         queue: String,
-        #[source] source: lapin::Error,
+        #[source]
+        source: lapin::Error,
     },
 
     #[error("队列不存在: {0}")]

@@ -45,7 +45,7 @@ warning_type = "DingTalk"  # 告警方式，目前仅支持钉钉
 webhook_url = "http://172.26.56.234:30001/robot/send"
 secret = "SEC6e530b1562fd61cbb034080cf58f218ec6b3c1672663d105cddf3e347a1ee309"
 user_id = "轨迹数据接收"
-custom_rebot_token = "c545703818d22c96c97008f3cdb14b86666cfe9087e75f1cf33386c93d9f804e"
+custom_robot_token = "c545703818d22c96c97008f3cdb14b86666cfe9087e75f1cf33386c93d9f804e"
 
 [warning]
 # 告警配置
