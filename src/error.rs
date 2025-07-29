@@ -9,6 +9,9 @@ pub enum AppError {
     #[error("RabbitMQ 连接错误")]
     ConnectionError(#[source] lapin::Error),
 
+    #[error("Oracle 连接错误")]
+    OracleConnectionError(#[source] r2d2::Error),
+
     #[error("无法连接到 '{host}:{port}'，重试 {attempts} 次后失败")]
     ConnectionRetryExhausted {
         host: String,

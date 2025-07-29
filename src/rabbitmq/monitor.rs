@@ -5,7 +5,7 @@ use anyhow::{Error, Result};
 use std::fmt::Write;
 use tracing::{error, info};
 
-pub async fn monitor_rabbitmq(config: Config) -> Result<Result<()>, Error> {
+pub(crate) async fn monitor_rabbitmq(config: Config) -> Result<Result<()>, Error> {
     // 创建服务
     let service = QueueMetricsService::new(config.rabbitmq.clone());
 
@@ -76,7 +76,7 @@ async fn send_warning_msg(
 }
 
 /// 打印监控结果表格
-pub fn print_metrics(
+fn print_metrics(
     metrics: &[crate::core::service::QueueMetric],
 ) -> anyhow::Result<(), std::fmt::Error> {
     // 计算最大列宽

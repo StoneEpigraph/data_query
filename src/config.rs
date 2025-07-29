@@ -36,6 +36,15 @@ pub struct RabbitMQConfig {
 }
 
 #[derive(Debug, Deserialize, Clone)]
+pub struct OracleConfig {
+    pub username: String,
+    pub password: String,
+    pub host: String,
+    pub port: u16,
+    pub db_name: String,
+}
+
+#[derive(Debug, Deserialize, Clone)]
 pub struct RabbitMQWarningConfig {
     pub enabled: bool,
     pub warning_queue_size: u32,
@@ -56,6 +65,7 @@ pub struct Config {
     pub rabbitmq: RabbitMQConfig,
     pub dingtalk: DingTalkConfig,
     pub warning: WarningConfig,
+    pub oracle: OracleConfig,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -74,7 +84,7 @@ pub enum WarningType {
 
 impl Config {
     pub fn load() -> Result<Self, AppError> {
-        match from_str(&*fs::read_to_string(Path::new("config.toml")).unwrap()) {
+        match from_str(&*fs::read_to_string(Path::new("conf.toml")).unwrap()) {
             Ok(config) => Ok(config),
             Err(error) => Err(ConfigError(error.to_string())),
         }
@@ -89,7 +99,7 @@ mod tests {
 
     #[test]
     fn test_config_compatibility() {
-        let config: Config = from_str(fs::read_to_string("config.toml").unwrap().as_str()).unwrap();
+        let config: Config = from_str(fs::read_to_string("conf.toml").unwrap().as_str()).unwrap();
         assert_eq!(config.rabbitmq.port, 5672);
         assert_eq!(config.rabbitmq.username, "star");
     }
@@ -127,7 +137,7 @@ mod tests {
         warning_type = "DingTalk"
         warning_time_interval = 10  # 告警时间间隔，单位：分钟
         "#;
-        let config: Config = from_str(config_str).expect("Failed to parse config");
+        let config: Config = from_str(config_str).expect("Failed to parse conf");
         assert_eq!(config.warning.warning_valid, false);
         assert_eq!(config.warning.warning_type, Some(WarningType::DingTalk));
     }

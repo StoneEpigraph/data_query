@@ -36,6 +36,13 @@ enabled = true  # 是否启用RabbitMQ告警
 warning_queue_size = 100000
 warning_type = "DingTalk"  # 告警方式，目前仅支持钉钉
 
+[oracle]
+username = "ADMIN_PLATFORM"
+password = "Hauasdkjnq#318!"
+host = "127.0.0.1"
+port = 62001
+db_name = "orcl11g"
+
 [dingtalk]
 # 钉钉机器人配置
 #webhook_url = "https://oapi.dingtalk.com/robot/send"

@@ -4,13 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-config = "0.15.11"
+config = { version = "0.15.13", features = ["yaml"] }
 dotenvy = "0.15.7"
 lapin = "3.0.0"
 serde = { version = "1.0.219", features = ["derive"] }
 tokio = { version = "1.45.1", features = ["full"] }
-tracing = "0.1.41"
-tracing-subscriber = "0.3.19"
+tracing = { version = "0.1.41", features = ["async-await"] }
+tracing-subscriber = { version = "0.3.19", features = ["fmt", "env-filter", "json", "chrono"] }
 thiserror = "2.0.12"
 anyhow = "1.0.98"
 toml = "0.8.23"
@@ -21,6 +21,9 @@ sha2 = "0.10.9"
 chrono = "0.4.41"
 base64 = "0.22.1"
 openssl = { version = "0.10", features = ["vendored"] }
+r2d2 = "0.8.10"
+r2d2-oracle = { version = "0.7.0", features = ["chrono"] }
+axum = { version = "0.8.4", features = ["macros"] }
 
 [target.x86_64-unknown-linux-musl]
 linker = "x86_64-linux-musl-gcc"  # 指定 musl 链接器
